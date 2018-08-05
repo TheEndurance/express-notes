@@ -41,3 +41,9 @@ exports.count =  function(){
         resolve(notes.length);
     });
 }
+
+exports.close = function(){
+    return new Promise((resolve,reject)=>{
+        resolve();
+    });
+}

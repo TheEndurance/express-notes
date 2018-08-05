@@ -1,12 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const notes = require('./routes/notes.js');
+const notes = require('./routes/notes.js').router;
 
 const app = express();
 
 //middleawre
 app.use(bodyParser.urlencoded({
-    extended:true
+    extended:false
 }));
 app.use(bodyParser.json());
 

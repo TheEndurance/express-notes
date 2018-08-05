@@ -18,5 +18,4 @@ router.put('/notes/:key',NotesController.editNote);
 //delete
 router.delete('/notes/:key',NotesController.deleteNote);
 
-
 exports.router = router;
