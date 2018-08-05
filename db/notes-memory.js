@@ -19,7 +19,7 @@ exports.read = function(key){
     });
 }
 
-exports.destroy = function(key){
+exports.delete = function(key){
     return new Promise((resolve,reject)=>{
         if (notes[key]){
             delete notes[key];

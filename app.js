@@ -4,4 +4,14 @@ const notes = require('./routes/notes.js');
 
 const app = express();
 
-app.use('/notes',notes);
+//middleawre
+app.use(bodyParser.urlencoded({
+    extended:true
+}));
+app.use(bodyParser.json());
+
+//routes
+app.use('/api',notes);
+
+
+module.exports = app;

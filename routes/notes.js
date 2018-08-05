@@ -1,25 +1,22 @@
 const express = require('express');
-
-const router = exports.router = express.Router();
+const Note = require('../models/Notes.js');
+const NotesController = require('../controllers/notesController.js');
+const router = express.Router();
 
 //get the note
-router.get('/notes/:key',async (req,res,next)=>{
+router.get('/notes/:key',NotesController.getNoteById);
 
-});
+//get all notes
+router.get('/notes',NotesController.getNotes);
 
-//create
-router.post('/notes',async (req,res,next)=>{
+//create note
+router.post('/notes',NotesController.createNote);
 
-});
-
-//update
-router.put('/notes/:key',async (req,res,next)=>{
-
-});
+//update note
+router.put('/notes/:key',NotesController.editNote);
 
 //delete
-router.delete('/notes/:key', async (req,res,next)=> {
-
-});
+router.delete('/notes/:key',NotesController.deleteNote);
 
 
+exports.router = router;
