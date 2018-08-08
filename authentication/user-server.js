@@ -1,6 +1,5 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const cookieParse = require('cookie-parser')
+const express = require('express');
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const fs = require('fs-extra');
@@ -20,9 +19,6 @@ app.use(bodyParser.urlencoded({
 // For each request, parse request body into a JavaScript object where header Content-Type is application/json
 app.use(bodyParser.json());
 
-// For each request, parse cookies
-app.use(cookieParse());
-
 app.get('/login', (req, res) => {
 
   
@@ -41,7 +37,6 @@ app.get('/login', (req, res) => {
   let decodedToken = jwt.verify(token,publicKey,{algorithms: ['RS256']});
 
 
-  
   // Send the response with 200 status code (ok) and the user object + the token
   // The client will send the token with every future request
   // against secured API endpoints.
