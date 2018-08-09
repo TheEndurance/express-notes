@@ -7,12 +7,17 @@ const bcrypt = require('bcryptjs');
 let UserModel;
 let sequlz;
 
+const readFile = util.promisify(fs.readFile);
+
 async function connectDB() {
     if (UserModel) return UserModel.sync();
-    const yamlttext = await fs.readFile(process.env.SEQUELIZE_CONNECT, 'utf8');
+    const yamlttext = await readFile(process.env.SEQUELIZE_CONNECT, 'utf8');
     const params = await jsyaml.safeLoad(yamlttext, 'utf8');
-    if (!sequlz) sequlz = new Sequelize(params.dbname, params.username, params.params);
-    sequlz.define('User', {
+    if (!sequlz) sequlz = new Sequelize(params.dbname, params.username, params.password,{
+        ...params.params
+    }
+     );
+    if (!UserModel) UserModel = sequlz.define('User', {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
@@ -30,16 +35,11 @@ async function connectDB() {
 exports.createUser = async (username, password) => {
     const hashedPassword = await bcrypt.hash(password, 8);
     const userModel = await connectDB();
-    userModel.findOrCreate({
-        where: {
-            username: username
-        },
-        defaults: {
-            password:hashedPassword
-        }
-    }).spread((user, created) => {
-        return user;
+    const user =  await userModel.create({
+        username:username,
+        password:hashedPassword
     });
+    return user;
 }
 
 

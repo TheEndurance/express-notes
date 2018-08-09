@@ -17,7 +17,7 @@ exports.login = async (req, res, next) => {
     const validUser = await userModel.checkUserAndPassword(req.body.username, req.body.password);
     if (validUser && validUser.check === true) {
         const user = await userModel.find(req.body.username);
-        const privateKey = await readFile('jwtRS256.key');
+        const privateKey = await readFile('../jwtRS256.key');
         let token = jwt.sign({
             username: user.username
         }, privateKey, {
@@ -38,7 +38,7 @@ exports.login = async (req, res, next) => {
 }
 
 exports.register = async (req, res, next) => {
-    if (!req.body.username || req.body.password) {
+    if (!req.body.username || !req.body.password) {
         return res.status(400).send({
             auth: false,
             token: null,
@@ -54,8 +54,9 @@ exports.register = async (req, res, next) => {
         });
     } else {
         const user = await userModel.createUser(req.body.username, req.body.password);
+        console.log(user.dataValues);
         if (user && user.username) {
-            const privateKey = await readFile('jwtRS256.key');
+            const privateKey = await readFile('../jwtRS256.key');
             let token = jwt.sign({
                 username: user.username
             }, privateKey, {
@@ -67,5 +68,8 @@ exports.register = async (req, res, next) => {
                 token: token
             });
         }
+        return res.status(400).send({
+            message: "Something went wrong"
+        });
     }
 }
