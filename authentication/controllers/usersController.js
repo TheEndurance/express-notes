@@ -7,6 +7,13 @@ const userModel = require('../db/users-sequelize.js');
 const readFile = util.promisify(fs.readFile);
 
 exports.login = async (req, res, next) => {
+    if (!req.body.username || !req.body.password) {
+        return res.status(400).send({
+            auth: false,
+            token: null,
+            message: "Missing username or password"
+        });
+    }
     const validUser = await userModel.checkUserAndPassword(req.body.username, req.body.password);
     if (validUser && validUser.check === true) {
         const user = await userModel.find(req.body.username);
@@ -17,12 +24,12 @@ exports.login = async (req, res, next) => {
             algorithm: 'RS256',
             expiresIn: 86400
         });
-        res.status(200).send({
+        return res.status(200).send({
             auth: true,
             token: token
-        })
+        });
     } else if (validUser && validUser.check === false) {
-        res.status(400).send({
+        return res.status(401).send({
             auth: false,
             token: null,
             message: validUser.message
@@ -30,7 +37,35 @@ exports.login = async (req, res, next) => {
     }
 }
 
-//TODO:
-exports.register = async (req,res,next) => {
-    
+exports.register = async (req, res, next) => {
+    if (!req.body.username || req.body.password) {
+        return res.status(400).send({
+            auth: false,
+            token: null,
+            message: "Missing username or password"
+        });
+    }
+    const user = await userModel.find(req.body.username);
+    if (user !== undefined) {
+        return res.status(400).send({
+            auth: false,
+            token: null,
+            message: `${user.username} already exists`
+        });
+    } else {
+        const user = await userModel.createUser(req.body.username, req.body.password);
+        if (user && user.username) {
+            const privateKey = await readFile('jwtRS256.key');
+            let token = jwt.sign({
+                username: user.username
+            }, privateKey, {
+                algorithm: 'RS256',
+                expiresIn: 86400
+            });
+            return res.status(200).send({
+                auth: true,
+                token: token
+            });
+        }
+    }
 }

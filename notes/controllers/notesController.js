@@ -3,11 +3,9 @@ const notes = require('../db/notes.js');
 
 
 exports.getNoteById = async (req, res, next) => {
-    if (req.params.key) {
-        const key = await notes.keylist();
-        if (key && req.params.key === key) {
-            res.send(await notes.read(req.params.key));
-        }
+    const key = await notes.keylist();
+    if (req.params.key && req.params.key === key) {
+        res.send(await notes.read(req.params.key));
     } else {
         res.status(400).send("Note not found");
     }
@@ -27,7 +25,7 @@ exports.createNote = async (req, res, next) => {
     try {
         const newNote = await notes.create(req.body.key, req.body.title, req.body.body);
         res.send(newNote);
-    } catch (e){
+    } catch (e) {
         res.status(400).send(e.toString());
     }
 }
@@ -36,7 +34,7 @@ exports.deleteNote = async (req, res, next) => {
     if (req.params.key) {
         const msg = await notes.delete(req.params.key);
         if (!msg) {
-            res.status(200).send();
+            return res.status(200).send();
         }
         res.status(400).send(msg);
     }
@@ -45,7 +43,7 @@ exports.deleteNote = async (req, res, next) => {
 exports.editNote = async (req, res, next) => {
     const updatedNote = await notes.update(req.body.key, req.body.title, req.body.body);
     if (updatedNote instanceof Note) {
-        res.send(updatedNote);
+        return res.send(updatedNote);
     }
     res.status(400).send(updatedNote);
 }

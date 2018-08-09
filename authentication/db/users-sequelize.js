@@ -13,10 +13,10 @@ async function connectDB() {
     const params = await jsyaml.safeLoad(yamlttext, 'utf8');
     if (!sequlz) sequlz = new Sequelize(params.dbname, params.username, params.params);
     sequlz.define('User', {
-        id:{
-            type:Sequelize.INTEGER,
-            primaryKey:true,
-            autoIncrement:true
+        id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
         },
         username: {
             type: Sequelize.STRING,
@@ -27,34 +27,59 @@ async function connectDB() {
     return UserModel.sync();
 }
 
-exports.createUser = async (username,password) => {
-    const hashedPassword = await bcrypt.hash(password,8);
+exports.createUser = async (username, password) => {
+    const hashedPassword = await bcrypt.hash(password, 8);
     const userModel = await connectDB();
-    return userModel.create({
-        username:username,
-        password:hashedPassword
+    userModel.findOrCreate({
+        where: {
+            username: username
+        },
+        defaults: {
+            password:hashedPassword
+        }
+    }).spread((user, created) => {
+        return user;
     });
 }
 
 
 exports.find = async (username) => {
     const userModel = await connectDB();
-    const user = await userModel.find({ where: { username: username } });
+    const user = await userModel.find({
+        where: {
+            username: username
+        }
+    });
     const ret = user ? user : undefined;
     return ret;
 }
 
-exports.checkUserAndPassword = async (username,password) => {
+exports.checkUserAndPassword = async (username, password) => {
     const userModel = await connectDB();
-    const user = await userModel.find({ where: { username: username } });
+    const user = await userModel.find({
+        where: {
+            username: username
+        }
+    });
     if (!user) {
-        return { check: false, username: username, message: "Could not find user" };
+        return {
+            check: false,
+            username: username,
+            message: "Could not find user"
+        };
     } else if (user.username === username) {
-        const passwordIsValid = await bcrypt.compare(user.password,password);
-        if (passwordIsValid){
-            return { check: true, username: user.username };
+        const passwordIsValid = await bcrypt.compare(user.password, password);
+        if (passwordIsValid) {
+            return {
+                check: true,
+                username: user.username
+            };
         }
     } else {
-        return { check: false, username: username, message: "Incorrect password" };
+        return {
+            check: false,
+            username: username,
+            message: "Incorrect password"
+        };
     }
 }
