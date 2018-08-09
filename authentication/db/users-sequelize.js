@@ -40,7 +40,7 @@ exports.createUser = async (username,password) => {
 exports.find = async (username) => {
     const userModel = await connectDB();
     const user = await userModel.find({ where: { username: username } });
-    const ret = user ? sanitizedUser(user) : undefined;
+    const ret = user ? user : undefined;
     return ret;
 }
 
