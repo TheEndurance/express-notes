@@ -19,6 +19,8 @@ app.use(bodyParser.urlencoded({
 // For each request, parse request body into a JavaScript object where header Content-Type is application/json
 app.use(bodyParser.json());
 
+
+app.use('/auth',)
 app.get('/login', (req, res) => {
 
   
