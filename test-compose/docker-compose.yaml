@@ -1,0 +1,33 @@
+version: "3"
+services:
+  test-db-userauth:
+    image: postgres:10.4
+    container_name: test-db-userauth
+    networks:
+      - test-authnet
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: users
+    volumes:
+      - test-postgres-userauth-db:/var/lib/postgresql/data
+    restart: always
+  test-userauth: 
+    build: ../authentication
+    container_name: test-userauth
+    depends_on:
+      - test-db-userauth
+    networks:
+     - test-authnet
+    ports:
+     - "3003:3003"
+    restart: always
+    command: npm run test
+
+
+networks:
+  test-authnet:
+    driver: bridge
+
+volumes:
+  test-postgres-userauth-db:

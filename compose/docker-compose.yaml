@@ -1,0 +1,33 @@
+version: "3"
+services:
+  db-userauth:
+    image: postgres:10.4
+    container_name: db-userauth
+    networks:
+      - authnet
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: users
+    volumes:
+      - postgres-userauth-db:/var/lib/postgresql/data
+    restart: always
+  userauth: 
+    build: ../authentication
+    container_name: userauth
+    depends_on:
+      - db-userauth
+    networks:
+     - authnet
+    ports:
+     - "80:3003"
+    restart: always
+    volumes: 
+      - ../authentication/:/userauth
+
+networks:
+  authnet:
+    driver: bridge
+
+volumes:
+  postgres-userauth-db:

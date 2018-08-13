@@ -29,7 +29,7 @@ async function connectDB() {
         },
         password: Sequelize.STRING,
     });
-    return UserModel.sync();
+    return UserModel.sync(); 
 }
 
 exports.createUser = async (username, password) => {
@@ -56,7 +56,7 @@ exports.find = async (username) => {
 
 exports.checkUserAndPassword = async (username, password) => {
     const userModel = await connectDB();
-    const user = await userModel.find({
+    const user = await userModel.findOne({
         where: {
             username: username
         }
@@ -68,18 +68,18 @@ exports.checkUserAndPassword = async (username, password) => {
             message: "Could not find user"
         };
     } else if (user.username === username) {
-        const passwordIsValid = await bcrypt.compare(user.password, password);
+        const passwordIsValid = await bcrypt.compare(password,user.password);
         if (passwordIsValid) {
             return {
                 check: true,
                 username: user.username
             };
+        } else {
+            return {
+                check: false,
+                username: username,
+                message: "Incorrect password"
+            };
         }
-    } else {
-        return {
-            check: false,
-            username: username,
-            message: "Incorrect password"
-        };
     }
 }
