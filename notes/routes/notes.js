@@ -2,20 +2,23 @@ const express = require('express');
 const Note = require('../models/Notes.js');
 const NotesController = require('../controllers/notesController.js');
 const router = express.Router();
+const {
+    verifyJWT
+} = require('../authorization/auth.js');
 
 //get the note
-router.get('/notes/:key',NotesController.getNoteById);
+router.get('/notes/:key', verifyJWT, NotesController.getNoteById);
 
 //get all notes
-router.get('/notes',NotesController.getNotes);
+router.get('/notes', verifyJWT, NotesController.getNotes);
 
 //create note
-router.post('/notes',NotesController.createNote);
+router.post('/notes', verifyJWT, NotesController.createNote);
 
 //update note
-router.put('/notes/:key',NotesController.editNote);
+router.put('/notes/:key', verifyJWT, NotesController.editNote);
 
 //delete
-router.delete('/notes/:key',NotesController.deleteNote);
+router.delete('/notes/:key', verifyJWT, NotesController.deleteNote);
 
 exports.router = router;
