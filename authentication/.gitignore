@@ -1,5 +1,5 @@
 node_modules
-*.env
-*.sqlite3
+.env
+.yaml
+jwtRS256.key
 *.key
-*.yaml

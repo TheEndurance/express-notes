@@ -1,0 +1,7 @@
+dbname: users
+username: postgres
+password: postgres
+params:
+    host: db-userauth
+    port: 5432
+    dialect: postgres
