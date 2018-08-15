@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env NOTES_MODEL=memory nodemon server.js ",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "docker": "node server.js",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",

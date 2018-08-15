@@ -20,13 +20,39 @@ services:
     networks:
      - authnet
     ports:
-     - "80:3003"
+     - "3003:3003"
     restart: always
     volumes: 
       - ../authentication/:/userauth
+  notes:
+    build: ../notes
+    container_name: notes
+    depends_on:
+      - userauth
+    networks:
+      - frontnet
+    ports:
+    - "3000:3000"
+    restart: always
+    volumes:
+      - ../notes:/notesapp
+  db-notes:
+    image: "bitnami/mongodb:4.0"
+    container_name: db-notes
+    networks:
+      - frontnet
+    ports:
+      - "27017:27017"
+    volumes:
+      - ../notes/data/mongo:/bitnami
+    
+      
+        
 
 networks:
   authnet:
+    driver: bridge
+  frontnet:
     driver: bridge
 
 volumes:
