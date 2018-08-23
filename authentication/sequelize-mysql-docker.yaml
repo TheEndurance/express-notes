@@ -1,7 +1,0 @@
-dbname: users
-username: authuser
-password: Zalk8jnmfqpo@1
-params:
-    host: db-userauth
-    port:
-    dialect: mysql
