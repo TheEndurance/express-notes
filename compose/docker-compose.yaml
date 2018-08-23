@@ -45,9 +45,12 @@ services:
       - "27017:27017"
     volumes:
       - ../notes/data/mongo:/bitnami
+    environment:
+      - MONGODB_USERNAME=admin
+      - MONGODB_PASSWORD=password123
+      - MONGODB_DATABASE=notes
     
       
-
 networks:
   authnet:
     driver: bridge
