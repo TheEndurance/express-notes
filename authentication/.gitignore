@@ -1,5 +1,4 @@
 node_modules
 .env
 .yaml
-jwtRS256.key
-*.key
+.key
