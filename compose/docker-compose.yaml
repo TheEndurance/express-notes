@@ -47,7 +47,6 @@ services:
       - ../notes/data/mongo:/bitnami
     
       
-        
 
 networks:
   authnet:
