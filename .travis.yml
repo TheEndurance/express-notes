@@ -1,7 +1,11 @@
 language: node_js
 node_js:
     - "lts/*"
+before_install: 
+    - cd notes
 install:
     - npm install
+before_script:
+    - cd notes
 script:
     - npm test
