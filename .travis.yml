@@ -5,7 +5,5 @@ before_install:
     - cd notes
 install:
     - npm install
-before_script:
-    - cd notes
 script:
     - npm test
