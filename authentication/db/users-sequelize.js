@@ -13,10 +13,10 @@ async function connectDB() {
     if (UserModel) return UserModel.sync();
     const yamlttext = await readFile(process.env.SEQUELIZE_CONNECT, 'utf8');
     const params = await jsyaml.safeLoad(yamlttext, 'utf8');
-    if (!sequlz) sequlz = new Sequelize(params.dbname, params.username, params.password,{
+    if (!sequlz) sequlz = new Sequelize(params.dbname, params.username, params.password, {
         ...params.params
     }
-     );
+    );
     if (!UserModel) UserModel = sequlz.define('User', {
         id: {
             type: Sequelize.INTEGER,
@@ -29,15 +29,15 @@ async function connectDB() {
         },
         password: Sequelize.STRING,
     });
-    return UserModel.sync(); 
+    return UserModel.sync();
 }
 
 exports.createUser = async (username, password) => {
     const hashedPassword = await bcrypt.hash(password, 8);
     const userModel = await connectDB();
-    const user =  await userModel.create({
-        username:username,
-        password:hashedPassword
+    const user = await userModel.create({
+        username: username,
+        password: hashedPassword
     });
     return user;
 }
@@ -68,7 +68,7 @@ exports.checkUserAndPassword = async (username, password) => {
             message: "Could not find user"
         };
     } else if (user.username === username) {
-        const passwordIsValid = await bcrypt.compare(password,user.password);
+        const passwordIsValid = await bcrypt.compare(password, user.password);
         if (passwordIsValid) {
             return {
                 check: true,

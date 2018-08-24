@@ -12,7 +12,8 @@
   "author": "",
   "license": "ISC",
   "jest": {
-    "verbose": true
+    "verbose": true,
+    "testURL": "http://localhost/"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
